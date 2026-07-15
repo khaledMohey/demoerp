@@ -1,36 +1,71 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# DemoERP — نظام بيع وتوريدات
 
-## Getting Started
+نظام ERP ويب بالعربية لإدارة المخزون، التوريدات، المبيعات (عميل/شركة)، الموردين، البنوك، وكشوف الحساب والتقارير.
 
-First, run the development server:
+## المتطلبات
+
+- Node.js 20+
+
+## التشغيل المحلي (SQLite)
+
+يعمل مباشرة بدون تثبيت قاعدة بيانات:
 
 ```bash
+npm install
+npx prisma migrate dev --name init
+npm run db:seed
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+افتح [http://localhost:3000](http://localhost:3000)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### حسابات تجريبية
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| الدور | اسم المستخدم | كلمة المرور |
+|--------|---------|-------------|
+| مدير | admin | admin123 |
+| مخازن | store | store123 |
+| مبيعات | sales | sales123 |
+| محاسب | acc | acc123 |
 
-## Learn More
+### دليل الاستخدام (PDF)
 
-To learn more about Next.js, take a look at the following resources:
+- من داخل النظام: القائمة → **دليل الاستخدام (PDF)**
+- أو افتح: `public/guides/دليل-استخدام-DemoERP.pdf`
+- لإعادة إنشاء الدليل: `npm run guide:pdf`
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### الموبايل
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+النظام متجاوب — على الهاتف اضغط ☰ لفتح/إغلاق القائمة الجانبية.
 
-## Deploy on Vercel
+## PostgreSQL للإنتاج
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+1. شغّل Postgres: `docker compose up -d` (أو استخدم Neon/RDS)
+2. في `prisma/schema.prisma` غيّر:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```prisma
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+```
+
+3. ضع في `.env`:
+
+```
+DATABASE_URL="postgresql://erp:erp_secret@localhost:5432/demoerp?schema=public"
+AUTH_SECRET="..."
+NEXTAUTH_URL="https://your-domain.com"
+```
+
+4. `npx prisma migrate deploy && npm run db:seed && npm run build && npm start`
+
+## الوحدات
+
+- **أصناف / مخزن (FIFO)** — كل توريد = دفعة بسعر شراء وبيع؛ البيع يخصم من الأقدم أولاً
+- **توريدات** — مورد + كاش / إنستا / آجل / جزئي + إدخال دفعات للمخزن
+- **مبيعات** — اختيار عميل أو شركة + كاش / إنستا / آجل / جزئي
+- **موردين / عملاء / شركات** — كشوف حساب وسداد/تحصيل
+- **بنوك وخزنة** — أرصدة وحركات
+- **تقارير** — ربح الفترة، ربح الأصناف، قيمة المخزون
+- **موظفين** — أدوار: مدير / مخازن / مبيعات / محاسب

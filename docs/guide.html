@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <title>دليل استخدام DemoERP</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: "Cairo", sans-serif;
+      line-height: 1.75;
+      color: #0f1f1c;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 32px 24px;
+      font-size: 14px;
+    }
+    h1 { color: #0d7377; font-size: 28px; margin-bottom: 8px; }
+    h2 { color: #0a3d3f; font-size: 20px; margin-top: 32px; border-bottom: 2px solid #d5e0dc; padding-bottom: 6px; }
+    h3 { color: #0d7377; font-size: 16px; margin-top: 20px; }
+    .subtitle { color: #5a6f6a; margin-bottom: 24px; }
+    .box { background: #e8efed; border-radius: 8px; padding: 12px 16px; margin: 12px 0; }
+    ol, ul { padding-right: 24px; }
+    li { margin-bottom: 6px; }
+    table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 13px; }
+    th, td { border: 1px solid #d5e0dc; padding: 8px; text-align: right; }
+    th { background: #e8efed; }
+    .page-break { page-break-before: always; }
+    @media print {
+      body { padding: 16px; }
+      h2 { page-break-after: avoid; }
+    }
+  </style>
+</head>
+<body>
+
+<h1>دليل استخدام DemoERP</h1>
+<p class="subtitle">نظام بيع وتوريدات — شرح خطوة بخطوة<br />الإصدار 1.0 · المخزون بنظام FIFO</p>
+
+<div class="box">
+  <strong>بيانات الدخول (المدير):</strong><br />
+  اسم المستخدم: <code>admin</code><br />
+  كلمة المرور: <code>admin123</code>
+</div>
+
+<h2>1. تسجيل الدخول</h2>
+<ol>
+  <li>افتح رابط النظام في المتصفح (كمبيوتر أو موبايل).</li>
+  <li>أدخل اسم المستخدم وكلمة المرور.</li>
+  <li>اضغط <strong>دخول</strong>.</li>
+  <li>على الموبايل: اضغط أيقونة ☰ أعلى الشاشة لفتح القائمة الجانبية.</li>
+</ol>
+
+<h2>2. لوحة التحكم (الرئيسية)</h2>
+<p>تعرض ملخصاً سريعاً:</p>
+<ul>
+  <li>قيمة المخزون</li>
+  <li>إجمالي المبيعات والتكلفة والربح</li>
+  <li>إجمالي التوريدات</li>
+  <li>أرصدة البنوك والخزنة</li>
+  <li>عدد الموردين والعملاء والشركات</li>
+  <li>الأصناف منخفضة المخزون</li>
+</ul>
+
+<h2>3. المخزن / الأصناف</h2>
+<h3>3.1 إضافة صنف جديد</h3>
+<ol>
+  <li>من القائمة: <strong>المخزن / الأصناف</strong></li>
+  <li>اضغط <strong>صنف جديد</strong></li>
+  <li>أدخل: الكود، الاسم، الوحدة، سعر البيع، الحد الأدنى للمخزون</li>
+  <li>اضغط <strong>حفظ الصنف</strong></li>
+</ol>
+<p><em>ملاحظة:</em> الكمية والتكلفة الفعلية تدخل من التوريدات (دفعات FIFO).</p>
+
+<h3>3.2 عرض ملخص المخزن</h3>
+<p>في أعلى الصفحة 4 مربعات:</p>
+<ul>
+  <li><strong>إجمالي تكلفة المخزون</strong> — قيمة الدفعات المتبقية بسعر الشراء</li>
+  <li><strong>إجمالي بيع المخزون</strong> — قيمة البيع المتوقعة</li>
+  <li><strong>إجمالي الربح</strong> — الفرق بين البيع والتكلفة</li>
+  <li><strong>إجمالي الأصناف</strong> — عدد الأصناف النشطة</li>
+</ul>
+
+<h3>3.3 دفعات FIFO</h3>
+<ol>
+  <li>اضغط <strong>دفعات / تعديل</strong> على أي صنف</li>
+  <li>ستظهر كل الدفعات: تاريخ الدخول، المورد، الكمية، المتبقي، سعر الشراء، سعر البيع</li>
+  <li>الدفعة المعلّمة <strong>التالي للخصم</strong> هي الأقدم — يُخصم منها أولاً عند البيع</li>
+</ol>
+
+<div class="page-break"></div>
+
+<h2>4. الموردين</h2>
+<h3>4.1 إضافة مورد</h3>
+<ol>
+  <li>القائمة → <strong>الموردين</strong> → <strong>مورد جديد</strong></li>
+  <li>أدخل الاسم والهاتف والبيانات</li>
+  <li>احفظ</li>
+</ol>
+
+<h3>4.2 كشف حساب المورد</h3>
+<ol>
+  <li>من قائمة الموردين اضغط <strong>كشف حساب</strong></li>
+  <li>يعرض: التوريدات الآجلة، المدفوعات، الرصيد المستحق للمورد</li>
+  <li>للسداد: أدخل المبلغ واختر الحساب (خزنة/بنك) → <strong>تسجيل السداد</strong></li>
+</ol>
+
+<h2>5. التوريدات (إدخال المخزن)</h2>
+<ol>
+  <li>القائمة → <strong>التوريدات</strong> → <strong>توريد جديد</strong></li>
+  <li>اختر <strong>المورد</strong></li>
+  <li>اختر <strong>طريقة الدفع</strong>:
+    <ul>
+      <li><strong>كاش</strong> — خصم فوري من الخزنة</li>
+      <li><strong>إنستا باي</strong> — خصم من حساب إنستا/بنك</li>
+      <li><strong>آجل</strong> — يزيد رصيد المورد</li>
+      <li><strong>جزئي</strong> — جزء الآن والباقي على المورد</li>
+    </ul>
+  </li>
+  <li>أضف الأصناف: الكمية + <strong>سعر الشراء</strong> + <strong>سعر البيع</strong> لكل دفعة</li>
+  <li>اضغط <strong>إدخال للمخزن</strong></li>
+</ol>
+<p>كل سطر توريد = <strong>دفعة FIFO</strong> منفصلة بسعر شرائها.</p>
+
+<h2>6. العملاء والشركات</h2>
+<h3>6.1 العملاء (أفراد)</h3>
+<ol>
+  <li>القائمة → <strong>العملاء</strong> → إضافة عميل</li>
+  <li>كشف الحساب يظهر المبيعات الآجلة والتحصيلات</li>
+</ol>
+
+<h3>6.2 الشركات (B2B)</h3>
+<ol>
+  <li>القائمة → <strong>الشركات</strong> → إضافة شركة</li>
+  <li>تُستخدم عند البيع للشركات (آجل / جزئي)</li>
+  <li>كشف حساب منفصل لكل شركة</li>
+</ol>
+
+<div class="page-break"></div>
+
+<h2>7. المبيعات</h2>
+<ol>
+  <li>القائمة → <strong>المبيعات</strong> → <strong>فاتورة جديدة</strong></li>
+  <li>اختر <strong>نوع المشتري</strong>: عميل أو شركة</li>
+  <li>اختر العميل/الشركة</li>
+  <li>اختر طريقة التحصيل: كاش / إنستا / آجل / جزئي</li>
+  <li>أضف الأصناف والكميات وأسعار البيع</li>
+  <li>احفظ الفاتورة</li>
+</ol>
+<p><strong>FIFO:</strong> النظام يخصم تلقائياً من أقدم دفعة ويحسب التكلفة والربح بدقة.</p>
+<p>من تفاصيل الفاتورة ترى من أي دفعة تم الخصم.</p>
+
+<h2>8. البنوك والخزنة</h2>
+<ol>
+  <li>القائمة → <strong>البنوك والخزنة</strong></li>
+  <li>عرض أرصدة: الخزنة، البنوك، إنستا باي</li>
+  <li><strong>تسوية / إيداع / سحب</strong> — لتعديل الرصيد يدوياً</li>
+  <li>آخر الحركات: توريدات مدفوعة، تحصيل مبيعات، سداد موردين</li>
+  <li>إضافة حساب جديد: خزنة / بنك / إنستا</li>
+</ol>
+
+<h2>9. التقارير</h2>
+<ol>
+  <li>القائمة → <strong>التقارير</strong></li>
+  <li>حدد فترة (من — إلى)</li>
+  <li>تعرض:
+    <ul>
+      <li>إجمالي البيع والتكلفة وصافي الربح</li>
+      <li>إجمالي التوريدات</li>
+      <li>قيمة المخزون الحالية</li>
+      <li><strong>ربح الأصناف</strong> — لكل صنف: كمية مباعة، إيراد، تكلفة، ربح</li>
+      <li>جدول المخزون الحالي</li>
+    </ul>
+  </li>
+</ol>
+
+<h2>10. الموظفين والصلاحيات</h2>
+<p>من <strong>الموظفين</strong> (للمدير فقط):</p>
+<table>
+  <tr><th>الدور</th><th>الصلاحيات</th></tr>
+  <tr><td>مدير (ADMIN)</td><td>كل شيء + إدارة الموظفين</td></tr>
+  <tr><td>مخازن (STORE)</td><td>المخزن، التوريدات، الموردين</td></tr>
+  <tr><td>مبيعات (SALES)</td><td>المبيعات، العملاء، الشركات</td></tr>
+  <tr><td>محاسب (ACCOUNTANT)</td><td>البنوك، كشوف الحساب، التقارير</td></tr>
+</table>
+
+<h3>حسابات تجريبية</h3>
+<table>
+  <tr><th>المستخدم</th><th>كلمة المرور</th><th>الدور</th></tr>
+  <tr><td>admin</td><td>admin123</td><td>مدير</td></tr>
+  <tr><td>store</td><td>store123</td><td>مخازن</td></tr>
+  <tr><td>sales</td><td>sales123</td><td>مبيعات</td></tr>
+  <tr><td>acc</td><td>acc123</td><td>محاسب</td></tr>
+</table>
+
+<h2>11. سير العمل الموصى به</h2>
+<ol>
+  <li>أضف الموردين والعملاء والشركات</li>
+  <li>أضف الأصناف</li>
+  <li>سجّل توريداً من المورد (يدخل دفعات FIFO)</li>
+  <li>أنشئ فاتورة بيع (يخصم FIFO تلقائياً)</li>
+  <li>راجع التقارير وكشوف الحساب</li>
+</ol>
+
+<h2>12. استخدام الموبايل</h2>
+<ul>
+  <li>النظام متجاوب مع شاشة الهاتف</li>
+  <li>اضغط ☰ لفتح القائمة، ✕ لإغلاقها</li>
+  <li>الجداول قابلة للتمرير أفقياً</li>
+  <li>يُفضّل Chrome أو Safari حديث</li>
+</ul>
+
+<p style="margin-top:40px; text-align:center; color:#5a6f6a;">
+  DemoERP — بيع وتوريدات · دليل الاستخدام
+</p>
+
+</body>
+</html>

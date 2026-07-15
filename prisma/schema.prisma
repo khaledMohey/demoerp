@@ -1,0 +1,274 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  STORE
+  SALES
+  ACCOUNTANT
+}
+
+enum PaymentMethod {
+  CASH
+  INSTA
+  CREDIT
+  PARTIAL
+}
+
+enum BuyerType {
+  CUSTOMER
+  COMPANY
+}
+
+enum PartyType {
+  SUPPLIER
+  CUSTOMER
+  COMPANY
+}
+
+enum BankTxnType {
+  PURCHASE_PAYMENT
+  SALE_RECEIPT
+  SUPPLIER_PAYMENT
+  CUSTOMER_PAYMENT
+  TRANSFER
+  ADJUSTMENT
+}
+
+enum LedgerEntryType {
+  PURCHASE
+  SALE
+  PAYMENT
+  RECEIPT
+  ADJUSTMENT
+}
+
+model User {
+  id            String            @id @default(cuid())
+  username      String            @unique
+  name          String
+  email         String            @unique
+  password      String
+  role          Role              @default(SALES)
+  active        Boolean           @default(true)
+  createdAt     DateTime          @default(now())
+  purchases     Purchase[]
+  sales         Sale[]
+  bankTxns      BankTransaction[]
+  ledgerEntries LedgerEntry[]
+}
+
+model Item {
+  id            String         @id @default(cuid())
+  code          String         @unique
+  name          String
+  description   String?
+  unit          String         @default("قطعة")
+  quantity      Decimal        @default(0)
+  avgCost       Decimal        @default(0)
+  sellPrice     Decimal        @default(0)
+  minStock      Decimal        @default(0)
+  active        Boolean        @default(true)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  purchaseLines PurchaseLine[]
+  saleLines     SaleLine[]
+  batches       StockBatch[]
+}
+
+model StockBatch {
+  id             String           @id @default(cuid())
+  itemId         String
+  item           Item             @relation(fields: [itemId], references: [id])
+  purchaseId     String?
+  purchase       Purchase?        @relation(fields: [purchaseId], references: [id])
+  purchaseLineId String?
+  purchaseLine   PurchaseLine?    @relation(fields: [purchaseLineId], references: [id])
+  supplierId     String?
+  supplier       Supplier?        @relation(fields: [supplierId], references: [id])
+  quantity       Decimal
+  remaining      Decimal
+  unitCost       Decimal
+  sellPrice      Decimal          @default(0)
+  receivedAt     DateTime         @default(now())
+  createdAt      DateTime         @default(now())
+  allocations    SaleAllocation[]
+
+  @@index([itemId, receivedAt])
+  @@index([itemId, remaining])
+}
+
+model Supplier {
+  id        String       @id @default(cuid())
+  name      String
+  phone     String?
+  email     String?
+  address   String?
+  balance   Decimal      @default(0)
+  notes     String?
+  active    Boolean      @default(true)
+  createdAt DateTime     @default(now())
+  purchases Purchase[]
+  batches   StockBatch[]
+}
+
+model Customer {
+  id        String   @id @default(cuid())
+  name      String
+  phone     String?
+  email     String?
+  address   String?
+  balance   Decimal  @default(0)
+  notes     String?
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  sales     Sale[]
+}
+
+model Company {
+  id          String   @id @default(cuid())
+  name        String
+  taxNumber   String?
+  phone       String?
+  email       String?
+  address     String?
+  contactName String?
+  balance     Decimal  @default(0)
+  notes       String?
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  sales       Sale[]
+}
+
+model BankAccount {
+  id           String            @id @default(cuid())
+  name         String
+  type         String
+  accountNo    String?
+  balance      Decimal           @default(0)
+  isDefault    Boolean           @default(false)
+  active       Boolean           @default(true)
+  createdAt    DateTime          @default(now())
+  transactions BankTransaction[]
+  purchases    Purchase[]
+  sales        Sale[]
+}
+
+model Purchase {
+  id            String         @id @default(cuid())
+  number        String         @unique
+  supplierId    String
+  supplier      Supplier       @relation(fields: [supplierId], references: [id])
+  paymentMethod PaymentMethod
+  bankAccountId String?
+  bankAccount   BankAccount?   @relation(fields: [bankAccountId], references: [id])
+  totalCost     Decimal
+  paidAmount    Decimal        @default(0)
+  notes         String?
+  date          DateTime       @default(now())
+  createdById   String
+  createdBy     User           @relation(fields: [createdById], references: [id])
+  createdAt     DateTime       @default(now())
+  lines         PurchaseLine[]
+  batches       StockBatch[]
+}
+
+model PurchaseLine {
+  id         String       @id @default(cuid())
+  purchaseId String
+  purchase   Purchase     @relation(fields: [purchaseId], references: [id], onDelete: Cascade)
+  itemId     String
+  item       Item         @relation(fields: [itemId], references: [id])
+  quantity   Decimal
+  unitCost   Decimal
+  sellPrice  Decimal      @default(0)
+  lineTotal  Decimal
+  batches    StockBatch[]
+}
+
+model Sale {
+  id            String        @id @default(cuid())
+  number        String        @unique
+  buyerType     BuyerType
+  customerId    String?
+  customer      Customer?     @relation(fields: [customerId], references: [id])
+  companyId     String?
+  company       Company?      @relation(fields: [companyId], references: [id])
+  paymentMethod PaymentMethod
+  bankAccountId String?
+  bankAccount   BankAccount?  @relation(fields: [bankAccountId], references: [id])
+  totalSale     Decimal
+  totalCost     Decimal
+  totalProfit   Decimal
+  paidAmount    Decimal       @default(0)
+  notes         String?
+  date          DateTime      @default(now())
+  createdById   String
+  createdBy     User          @relation(fields: [createdById], references: [id])
+  createdAt     DateTime      @default(now())
+  lines         SaleLine[]
+}
+
+model SaleLine {
+  id          String           @id @default(cuid())
+  saleId      String
+  sale        Sale             @relation(fields: [saleId], references: [id], onDelete: Cascade)
+  itemId      String
+  item        Item             @relation(fields: [itemId], references: [id])
+  quantity    Decimal
+  unitPrice   Decimal
+  unitCost    Decimal
+  lineTotal   Decimal
+  lineCost    Decimal
+  lineProfit  Decimal
+  allocations SaleAllocation[]
+}
+
+model SaleAllocation {
+  id         String     @id @default(cuid())
+  saleLineId String
+  saleLine   SaleLine   @relation(fields: [saleLineId], references: [id], onDelete: Cascade)
+  batchId    String
+  batch      StockBatch @relation(fields: [batchId], references: [id])
+  quantity   Decimal
+  unitCost   Decimal
+  lineCost   Decimal
+}
+
+model BankTransaction {
+  id            String      @id @default(cuid())
+  bankAccountId String
+  bankAccount   BankAccount @relation(fields: [bankAccountId], references: [id])
+  type          BankTxnType
+  amount        Decimal
+  reference     String?
+  description   String?
+  date          DateTime    @default(now())
+  createdById   String
+  createdBy     User        @relation(fields: [createdById], references: [id])
+  createdAt     DateTime    @default(now())
+}
+
+model LedgerEntry {
+  id          String          @id @default(cuid())
+  partyType   PartyType
+  partyId     String
+  type        LedgerEntryType
+  debit       Decimal         @default(0)
+  credit      Decimal         @default(0)
+  balance     Decimal
+  reference   String?
+  description String?
+  date        DateTime        @default(now())
+  createdById String?
+  createdBy   User?           @relation(fields: [createdById], references: [id])
+  createdAt   DateTime        @default(now())
+
+  @@index([partyType, partyId, date])
+}
