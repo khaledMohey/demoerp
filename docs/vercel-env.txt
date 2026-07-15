@@ -1,0 +1,13 @@
+# انسخ القيم دي في Vercel → Project → Settings → Environment Variables
+# (Production + Preview)
+
+DATABASE_URL=postgresql://neondb_owner:YOUR_PASSWORD@ep-plain-dream-aiwurpdw-pooler.c-4.us-east-1.aws.neon.tech/neondb?sslmode=require
+
+DIRECT_URL=postgresql://neondb_owner:YOUR_PASSWORD@ep-plain-dream-aiwurpdw.c-4.us-east-1.aws.neon.tech/neondb?sslmode=require
+
+AUTH_SECRET=demoerp-vercel-secret-k7m9p2x4q8
+NEXTAUTH_SECRET=demoerp-vercel-secret-k7m9p2x4q8
+
+# بعد أول Deploy غيّر الرابط لرابط مشروعك الحقيقي:
+NEXTAUTH_URL=https://YOUR-PROJECT.vercel.app
+AUTH_URL=https://YOUR-PROJECT.vercel.app
