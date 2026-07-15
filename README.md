@@ -38,27 +38,46 @@ npm run dev
 
 النظام متجاوب — على الهاتف اضغط ☰ لفتح/إغلاق القائمة الجانبية.
 
-## PostgreSQL للإنتاج
+## PostgreSQL على Neon + الرفع على Vercel
 
-1. شغّل Postgres: `docker compose up -d` (أو استخدم Neon/RDS)
-2. في `prisma/schema.prisma` غيّر:
+### 1) Neon
+1. أنشئ مشروع على [neon.tech](https://neon.tech)
+2. انسخ **Connection string**
+   - للتطبيق: **Pooled**
+   - للـ migrations (اختياري): **Direct**
 
-```prisma
-datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
-}
-```
-
-3. ضع في `.env`:
+مثال `.env` (لا ترفعه على GitHub):
 
 ```
-DATABASE_URL="postgresql://erp:erp_secret@localhost:5432/demoerp?schema=public"
-AUTH_SECRET="..."
-NEXTAUTH_URL="https://your-domain.com"
+DATABASE_URL="postgresql://USER:PASSWORD@HOST-pooler....neon.tech/neondb?sslmode=require"
+DIRECT_URL="postgresql://USER:PASSWORD@HOST....neon.tech/neondb?sslmode=require"
+AUTH_SECRET="سلسلة-عشوائية-طويلة"
+NEXTAUTH_SECRET="نفس-الـAUTH_SECRET"
+NEXTAUTH_URL="https://your-app.vercel.app"
+AUTH_URL="https://your-app.vercel.app"
 ```
 
-4. `npx prisma migrate deploy && npm run db:seed && npm run build && npm start`
+### 2) تطبيق الجداول محلياً
+لو عندك VPN (مثل ProtonVPN) وفشل الاتصال — أوقفه مؤقتاً ثم:
+
+```bash
+npx prisma db push
+npm run db:seed
+```
+
+دخول الأدمن: `admin` / `admin123`
+
+### 3) Vercel
+1. Import المشروع من GitHub: `khaledMohey/demoerp`
+2. Environment Variables: نفس المتغيرات فوق (بس `NEXTAUTH_URL` = رابط Vercel)
+3. Deploy
+4. بعد أول رفع ناجح شغّل seed مرة واحدة من جهازك (مع نفس `DATABASE_URL`):
+
+```bash
+npm run db:seed
+```
+
+البناء يشغّل `prisma db push` تلقائياً ليخلق الجداول على Neon.
 
 ## الوحدات
 
